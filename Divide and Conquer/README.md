@@ -6,7 +6,6 @@ Solves a problem using following three steps
 2. Conquer : Recursively solve these subproblems
 3. Combine : Appropriately combine the answers
 
-Example
-- Merge Sort, Quick Sort, Binary Search
+Example : Merge Sort, Quick Sort, Binary Search
 
 Big-O : (NlogN)
