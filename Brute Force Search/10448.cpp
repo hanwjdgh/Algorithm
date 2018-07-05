@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<int > v,tri;
+vector<int > v, tri;
 
 int main() {
 	int K,num;
