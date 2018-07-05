@@ -21,6 +21,7 @@ int count() {
 		}
 		max_val = max(max_val, cnt);
 		cnt = 1;
+		
 		for (int j = 1; j < N; j++) {
 			if (arr[j][i] == arr[j + 1][i])
 				cnt++;
