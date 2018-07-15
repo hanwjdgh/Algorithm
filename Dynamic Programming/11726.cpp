@@ -21,4 +21,5 @@ int main(){
 		answer = dp[n];
 	}
 	cout << answer;
+	return 0;
 }
