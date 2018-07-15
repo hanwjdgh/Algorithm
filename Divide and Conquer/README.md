@@ -8,4 +8,5 @@ Solves a problem using following three steps
 
 Example : Merge Sort, Quick Sort, Binary Search
 
-Big-O : (NlogN)
+## Complexity
+- time : NlogN
