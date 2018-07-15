@@ -10,7 +10,7 @@ Example code from https://www.acmicpc.net/
 using namespace std;
 
 
-int main(void) {
+int main() {
 
 	return 0;
 }
