@@ -12,7 +12,7 @@
 - f(u,v) = -f(u,v)
 - Σf(u,v) = 0
 
-## Ford-fulkerson
+## Ford-fulkerson Algorithm
 The Ford-Fulkerson algorithm is an algorithm that tackles the max-flow min-cut problem. (DFS)
 
 - Pseudocode
@@ -40,7 +40,7 @@ return flow
 ```
 - Time Complexity : Ef
 
-## Edmonds-karp
+## Edmonds-karp Algorithm
 The Edmonds-Karp Algorithm is a specific implementation of the Ford-Fulkerson algorithm. Like Ford-Fulkerson, Edmonds-Karp is also an algorithm that deals with the max-flow min-cut problem. (BFS)
 
 - Pseudocode
@@ -69,3 +69,46 @@ Edmonds-Karp:
     return f
 ```
 - Time Complexity : VE<sup>2</sup>
+
+
+## Dinic's Algorithm
+
+Strongly polynomial algorithm for computing the maximum flow in a flow network
+
+- level graph : Graph showing the shortest distance from the source (the number of trunks that must be traversed) to the level value for all vertices
+- blocking flow : Movement is possible only when the level of v is exactly 1 level greater than that of u. In these graphs, no more flow rate is allowed from the source.
+
+- Pseudocode
+```bash
+bool bfs()
+    fill(level, level+MAX, -1)
+    level[S] = 0
+    
+    queue<int> Q
+    Q.push(S)
+    while !Q.empty():
+        int curr = Q.front()
+        Q.pop()
+        for int next: adj[curr]:
+            if level[next] == -1 && c[curr][next]-f[curr][next] > 0:
+                level[next] = level[curr] + 1
+                Q.push(next)
+    return level[E] != -1
+
+int dfs(int curr, int dest, int flow)
+    if curr == dest:
+        return flow;
+ 
+    for int &i=work[curr] to adj[curr].size()
+        int next = adj[curr][i]
+        if level[next] == level[curr]+1 && c[curr][next]-f[curr][next] > 0:
+            int df = dfs(next, dest, min(c[curr][next]-f[curr][next], flow))
+            if df > 0:
+                f[curr][next] += df
+                f[next][curr] -= df
+                return df
+    return 0;
+
+```
+
+- Time Complexity : V<sup>2</sup>E
