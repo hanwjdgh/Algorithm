@@ -73,6 +73,28 @@ function BellmanFord(list vertices, list edges, vertex source)
 ```
 - Time Complexity : VE
 
+## Shortest Path Faster Algorithm
+
+- Difference
+Bellman-Ford Algorithm update for all edges, but SPFA update for changed vertex and connected edge.
+
+- Pseudocode
+```bash
+procedure Shortest-Path-Faster-Algorithm(G, s)
+    for each vertex v ≠ s in V(G)
+        d(v) := ∞
+    d(s) := 0
+    offer s into Q
+    while Q is not empty
+        u := poll Q
+        for each edge (u, v) in E(G)
+            if d(u) + w(u, v) < d(v) then
+                d(v) := d(u) + w(u, v)
+                 if v is not in Q then
+                     offer v into Q
+```
+- Time complexity : E or V+E
+
 ## Floyd-Warshall Algorithm
 - Suitable for solving a single-sourece shortest path 
 - Finding shortest paths in a weighted graph with positive or negative edge weights (but with no negative cycles).
