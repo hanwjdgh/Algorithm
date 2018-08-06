@@ -18,7 +18,7 @@ int main() {
 	cin.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int N, M, chk=0;
+	int N, M, chk = 0;
 	char wall[MAX][MAX];
 
 	cin >> N >> M;
@@ -53,7 +53,7 @@ int main() {
 		}
 	}
 	if (chk == 1)
-		cout << visit[N - 1][M - 1][0];
+		cout << max(visit[N - 1][M - 1][0],visit[N - 1][M - 1][1]) << endl;
 	else
 		cout << "-1";
 	return 0;
