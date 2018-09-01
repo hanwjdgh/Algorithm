@@ -19,9 +19,6 @@ void Eratos(int n){
             PrimeArray[j]=false;
 		}
 	}
-
-	// 이후의 작업 ...
-
 }
 ```
 - Time Complexity : N<sup>2</sup>
