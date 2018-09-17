@@ -34,7 +34,7 @@ int main() {
 				fail[i] = ++j;
 		}
 
-		if (fail[L - 1] == 0)
+		if (fail[L - 1] == 0 || fail[L-1]% (L - fail[L - 1]) != 0)
 			cout << 1 << "\n";
 		else
 			cout << fail[L - 1] / (L - fail[L - 1]) + 1 << "\n";
