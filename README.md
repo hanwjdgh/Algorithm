@@ -26,11 +26,11 @@ int main() {
 
 ### 2. Description of the times
 
-    - O(1) : Regular execution time regardless of the number of input data
-    - O(logn) : Depending on the number of input data, the time gradually increases with time
-    - O(n) : It takes a linear execution time depending on the number of input data
-    - O(nlogn) : Splitting a big problem into a problem of a certain size and collecting it again
-    - O(n^2) : When processing input data within a dual loop
-    - O(n^3) : When processing input data within a triple loop
+    - Θ(1) : Regular execution time regardless of the number of input data
+    - Θ(logn) : Depending on the number of input data, the time gradually increases with time
+    - Θ(n) : It takes a linear execution time depending on the number of input data
+    - Θ(nlogn) : Splitting a big problem into a problem of a certain size and collecting it again
+    - Θ(n^2) : When processing input data within a dual loop
+    - Θ(n^3) : When processing input data within a triple loop
 
-    O(logn) > O(n) > O(nlogn) > O(n^2) > O(n^3) > O(2^n) > O(n!)
+    Θ(logn) > Θ(n) > Θ(nlogn) > Θ(n^2) > Θ(n^3) > Θ(2^n) > Θ(n!)
