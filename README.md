@@ -1,5 +1,7 @@
 # Algorithm
 
+Procedures or methods to solve problems through finite steps
+
 ## cpp format
 
 ```bash
