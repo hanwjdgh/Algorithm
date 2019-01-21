@@ -1,3 +1,3 @@
 # KMP
 
-- Time Complexity : N + M
+- Time Complexity : Θ(N+M)
