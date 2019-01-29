@@ -2,11 +2,8 @@
 #include <ios>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 using namespace std;
-
-int alcnt[26];
 
 int main() {
 	cin.tie(NULL);
