@@ -1,35 +1,45 @@
 #include <iostream>
-#include <cstdio>
+#include <ios>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
 
+int sum, t_a, t_b;
+
 int main() {
-	int arr[9];
-	int sum = 0, t_a = 0, t_b = 0;
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios::sync_with_stdio(false);
 
-	for (int i = 0; i < 9; i++)
-		scanf("%d", &arr[i]);
-	sort(arr, arr + 9);
-
-	for (int i = 0; i < 9; i++)
-		sum += arr[i];
+	int height;
+	vector <int > v;
 
 	for (int i = 0; i < 9; i++) {
-		for (int j = 0; j < 9; j++) {
-			if (sum - (arr[i] + arr[j]) == 100) {
+		cin >> height;
+		v.push_back(height);
+	}
+
+	sort(v.begin(), v.end());
+
+	for (int i = 0; i < 9; i++)
+		sum += v[i];
+
+	for (int i = 0; i < 9; i++) {
+		for (int j = i + 1; j < 9; j++)
+			if (sum - (v[i] + v[j]) == 100) {
 				t_a = i;
 				t_b = j;
 				break;
 			}
-		}
 	}
+
 	for (int i = 0; i < 9; i++) {
 		if (i == t_a || i == t_b)
 			continue;
 		else
-			printf("%d\n", arr[i]);
+			cout << v[i] << "\n";
 	}
-	
+
 	return 0;
 }

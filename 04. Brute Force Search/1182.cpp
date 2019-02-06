@@ -1,29 +1,39 @@
 #include <iostream>
-#include <cstdio>
+#include <ios>
 #include <vector>
 
 using namespace std;
 
-vector <int> arr;
-int N,S, cnt = 0;
+vector <int > v;
+int N, S, cnt;
 
-void find(int idx, int sum) {
-	if (idx >= N)
+void find(int n, int sum) {
+	if (n == N)
 		return;
-	sum += arr[idx];
-	if (sum == S)
+	if (sum + v[n] == S)
 		cnt++;
-	find(idx + 1, sum - arr[idx]);
-	find(idx + 1, sum);
+
+	find(n + 1, sum + v[n]);
+	find(n + 1, sum);
 }
+
 int main() {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios::sync_with_stdio(false);
+
 	int num;
-	scanf("%d %d", &N, &S);
+
+	cin >> N >> S;
+
 	for (int i = 0; i < N; i++) {
-		scanf("%d", &num);
-		arr.push_back(num);
+		cin >> num;
+		v.push_back(num);
 	}
+
 	find(0, 0);
-	printf("%d\n", cnt);
+
+	cout << cnt << "\n";
+
 	return 0;
 }

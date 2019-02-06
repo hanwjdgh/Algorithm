@@ -1,38 +1,50 @@
 #include <iostream>
-#include <cstdio>
+#include <ios>
+#include <vector>
+
+#define MAX 14
 
 using namespace std;
 
-int n, arr[20], visit[20];
+vector <int > v;
+int visit[MAX];
+int N;
 
-void find(int cur, int cnt) {  
-	if (cur == n && cnt == 6) {
-		for (int i = 0; i < n; i++) { 
-			if (visit[i] == 1) 
-				printf("%d ", arr[i]);
-		}
-		printf("\n");
+void find(int n, int cnt) {
+	if (n==N && cnt == 6) {
+		for (int i = 0; i < N; i++) 
+			if (visit[i])
+				cout << v[i] << " ";
+		cout << "\n";
 	}
-	if (cur == n) 
+	if (n == N)
 		return;
-	visit[cur] = 1;
-	find(cur + 1, cnt + 1);
-	visit[cur] = 0;  
-	find(cur + 1, cnt);
+
+	visit[n] = 1;
+	find(n + 1, cnt + 1);
+	visit[n] = 0;
+	find(n + 1, cnt);
 }
 
 int main() {
-	while (1) {
-		scanf("%d", &n);
-		if (n == 0)
-			break;
-		else {
-			for (int i = 0; i < n; i++) 
-				scanf("%d",&arr[i]);
-			visit[20] = { 0, }; 
-			find(0, 0);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios::sync_with_stdio(false);
+
+	int num;
+
+	while ((cin >> N) && N != 0) {
+		v.clear();
+		fill(visit, visit + MAX, 0);
+
+		for (int i = 0; i < N; i++) {
+			cin >> num;
+			v.push_back(num);
 		}
-		printf("\n");
+
+		find(0, 0);
+		cout << "\n";
 	}
+
 	return 0;
 }
