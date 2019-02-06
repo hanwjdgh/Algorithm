@@ -1,59 +1,71 @@
 #include <iostream>
-#include <cstdio>
-#include <queue>
+#include <ios>
 #include <vector>
+#include <queue>
 #include <algorithm>
+
+#define MAX 1001
 
 using namespace std;
 
-int visit[1001] = { 0, };
-queue <int > q;
-vector <int > adj[1001];
+vector <vector <int > > v;
+int visit[MAX];
+int N, M, V;
 
-void dfs(int x) {
-	printf("%d ", x);
-	for (int i = 0; i < adj[x].size(); i++) {
-		if (!visit[adj[x][i]]) {
-			visit[adj[x][i]] = 1;
-			dfs(adj[x][i]);
+void dfs(int cur) {
+	cout << cur << " ";
+
+	for (auto next : v[cur]) {
+		if (!visit[next]) {
+			visit[next] = 1;
+			dfs(next);
 		}
 	}
 }
 
-void bfs(int x) {
-	q.push(x);
-	visit[x] = 1;
+void bfs(int cur) {
+	queue <int > q;
+
+	q.push(cur);
+	visit[cur] = 1;
+
 	while (!q.empty()) {
-		int a = q.front();
+		int cu = q.front();
+		cout << cu << " ";
 		q.pop();
-		printf("%d ", a);
-		for (int i = 0; i < adj[a].size(); i++) {
-			if (!visit[adj[a][i]]) {
-				visit[adj[a][i]] = 1;
-				q.push(adj[a][i]);
+
+		for (auto next : v[cu]) {
+			if (!visit[next]) {
+				visit[next] = 1;
+				q.push(next);
 			}
 		}
 	}
 }
 
 int main() {
-	int N, M, V;
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios::sync_with_stdio(false);
 	int a, b;
 
-	scanf("%d %d %d", &N, &M, &V);
+	cin >> N >> M >> V;
+
+	v.resize(N + 1);
 	for (int i = 0; i < M; i++) {
-		scanf("%d %d", &a, &b);
-		adj[a].push_back(b);
-		adj[b].push_back(a);
+		cin >> a >> b;
+		v[a].push_back(b);
+		v[b].push_back(a);
 	}
+
 	for (int i = 1; i <= N; i++)
-		sort(adj[i].begin(), adj[i].end());
+		sort(v[i].begin(), v[i].end());
 
 	visit[V] = 1;
 	dfs(V);
-	printf("\n");
-	fill(visit, visit + 1001, 0);
+	cout << "\n";
+	fill(visit, visit + MAX, 0);
 	bfs(V);
-	printf("\n");
+	cout << "\n";
 	return 0;
 }

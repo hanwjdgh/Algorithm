@@ -1,49 +1,63 @@
 #include <iostream>
 #include <ios>
 #include <queue>
-#include <algorithm>
+#include <cstring>
+#include <tuple>
 
 #define MAX 301
 
 using namespace std;
 
-typedef pair <int, int > p;
+typedef tuple <int, int, int > t;
 
-int dx[8] = { -1,-2,-2,-1,1,2,2,1 }, dy[8] = { -2,-1,1,2,2,1,-1,-2 };
+int visit[MAX][MAX];
+int dir[8][2] = { {1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1},{-1,2} };
 
 int main() {
 	cin.tie(NULL);
+	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int T;
+	int T, I;
 
 	cin >> T;
-	while (T--) {
-		int chess[MAX][MAX] = { 0, }, visit[MAX][MAX] = { 0, };
-		int I;
-		int sx, sy, fx, fy;
-		queue <p > q;
-		cin >> I >> sx >> sy >> fx >> fy;
 
-		q.push({ sx,sy });
+	while (T--) {
+		int sx, sy, fx, fy;
+		int chk = 0;
+		queue <t > q;
+
+		memset(visit, 0, sizeof(visit));
+
+		cin >> I;
+		cin >> sx >> sy >> fx >> fy;
+
+		q.push({ sx,sy,0 });
 		visit[sx][sy] = 1;
+
 		while (!q.empty()) {
-			int cx = q.front().first, cy = q.front().second;
+			int cx = get<0>(q.front()), cy = get<1>(q.front()), ccnt = get<2>(q.front());
 			q.pop();
-			if (cx == fx&&cy == fy) {
-				cout << visit[cx][cy]-1 << endl;
+
+			if (cx == fx && cy == fy) {
+				cout << ccnt << "\n";
+				chk = 1;
 				break;
 			}
+
 			for (int i = 0; i < 8; i++) {
-				int nx = cx + dx[i], ny = cy + dy[i];
-				if (nx < 0 || ny < 0 || nx >= I || ny >= I)
+				int nx = cx + dir[i][0], ny = cy + dir[i][1];
+
+				if (nx < 0 || ny < 0 || nx >= I || ny >= I || visit[nx][ny])
 					continue;
-				if (visit[nx][ny] != 0)
-					continue;
-				visit[nx][ny] = visit[cx][cy] + 1;
-				q.push({ nx,ny });
+				q.push({ nx,ny,ccnt + 1 });
+				visit[nx][ny] = 1;
 			}
 		}
+		
+		if (!chk)
+			cout << "0" << "\n";
 	}
+
 	return 0;
 }

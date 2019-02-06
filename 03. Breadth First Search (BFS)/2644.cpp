@@ -1,54 +1,60 @@
 #include <iostream>
 #include <ios>
-#include <vector>
 #include <queue>
+#include <vector>
 
 #define MAX 101
 
 using namespace std;
 
-vector <int > v[MAX];
-int visit[MAX] = { 0, };
+typedef pair <int, int > p;
+
+vector <vector <int > > v;
+int visit[MAX];
+bool check;
 
 int main() {
 	cin.tie(NULL);
+	cout.tie(NULL);
 	ios::sync_with_stdio(false);
-	
-	int n, m;
-	int x, y, a, b;
-	int cnt = 0;
 
-	cin >> n >> x >> y >> m;
-	while (m--) {
+	queue <p > q;
+	int n, s, t, m;
+	int a, b;
+
+	cin >> n >> s >> t >> m;
+
+	v.resize(n + 1);
+
+	for (int i = 0; i < m; i++) {
 		cin >> a >> b;
 		v[a].push_back(b);
 		v[b].push_back(a);
 	}
-	
-	queue <int > q;
-	q.push(x);
-	visit[x] = 1;
-	int chk = 0;
+
+	q.push({ s,0 });
+	visit[s] = 1;
 
 	while (!q.empty()) {
-		int cur = q.front();
+		int cur = q.front().first, cnt = q.front().second;
 		q.pop();
-		
-		if (cur == y) {
-			chk = 1;
+
+		if (cur == t) {
+			cout << cnt << "\n";
+			check = true;
 			break;
 		}
-		
-		for (int next : v[cur]) {
+
+		for (auto next : v[cur]) {
 			if (!visit[next]) {
-				visit[next] = visit[cur]+1;
-				q.push(next);
+				q.push({ next,cnt + 1 });
+				visit[next] = 1;
 			}
 		}
 	}
-	if (chk == 1)
-		cout << visit[y] - 1;
-	else
-		cout << "-1";
+
+	if (!check)
+		cout << "-1" << "\n";
+
 	return 0;
 }

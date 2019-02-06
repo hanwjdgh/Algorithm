@@ -6,43 +6,42 @@
 
 using namespace std;
 
-queue <int > q;
-int visit[MAX] = { 0, };
+typedef pair <int, int > p;
+
+int visit[MAX];
 
 int main() {
 	cin.tie(NULL);
+	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int N, K, cnt = 0;
+	int N, K;
+	queue <p > q;
 
 	cin >> N >> K;
 
-	q.push(N);
+	q.push({ N,0 });
 	visit[N] = 1;
 
 	while (!q.empty()) {
-		int size = q.size();
-		while (size > 0) {
-			int x = q.front();
-			q.pop();
+		int cur = q.front().first, cnt = q.front().second;
+		q.pop();
 
-			if (x == K) {
-				cout << cnt;
-				break;
-			}
-			int dir[3] = { x - 1, x + 1, x * 2 };
-			for (int i = 0; i < 3; i++) {
-				int temp = dir[i];
-				if (temp<0 || temp > MAX - 1)
-					continue;
-				if (!visit[temp]) {
-					visit[temp] = 1;
-					q.push(temp);
-				}
-			}
-			size--;
+		if (cur == K) {
+			cout << cnt << "\n";
+			break;
 		}
-		cnt++;
+
+		int dir[3] = { cur + 1, cur - 1, cur * 2 };
+
+		for (int i = 0; i < 3; i++) {
+			int next = dir[i];
+			if (next<0 || next>MAX || visit[next])
+				continue;
+			q.push({ next,cnt + 1 });
+			visit[next] = 1;
+		}
 	}
+
 	return 0;
 }
