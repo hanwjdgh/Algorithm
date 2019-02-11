@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ios>
 #include <cstring>
+#include <algorithm>
 
 #define MAX 4001
 
@@ -11,10 +12,7 @@ int N, board[MAX][MAX];
 int atom[1001][4];
 
 void remove(int idx) {
-	atom[idx][0] = atom[N - 1][0];
-	atom[idx][1] = atom[N - 1][1];
-	atom[idx][2] = atom[N - 1][2];
-	atom[idx][3] = atom[N - 1][3];
+	swap(atom[idx], atom[N - 1]);
 	--N;
 }
 
@@ -42,28 +40,31 @@ int main() {
 			atom[i][3] = e;
 			board[(y + 1000) * 2][(x + 1000) * 2] = e;
 		}
-	
+
 		for (int i = 0; i <= MAX; i++) {
-			int q_size = N;
-			if (q_size == 0)
-				break;
-			for (int j = 0; j < q_size; j++) {
+			for (int j = 0; j < N; j++) {
 				int cx = atom[j][0], cy = atom[j][1], cd = atom[j][2], ce = atom[j][3];
 
 				if (board[cx][cy] > ce) {
 					cnt += board[cx][cy];
 					board[cx][cy] = 0;
-					remove(j);
+					swap(atom[j], atom[N - 1]);
+					N--;
+					j--;
 					continue;
 				}
 
 				int nx = cx + dir[cd][0], ny = cy + dir[cd][1];
-			
+
 				if (nx < 0 || ny < 0 || nx >= MAX || ny >= MAX) {
 					board[cx][cy] = 0;
+					swap(atom[j], atom[N - 1]);
+					N--;
+					j--;
 					continue;
 				}
 				atom[j][0] = nx, atom[j][1] = ny;
+
 				if (board[nx][ny] == 0) {
 					board[cx][cy] = 0;
 					board[nx][ny] = ce;
@@ -71,8 +72,11 @@ int main() {
 				else {
 					board[cx][cy] = 0;
 					board[nx][ny] += ce;
-					remove(j);
+					swap(atom[j], atom[N - 1]);
+					N--;
+					j--;
 				}
+
 			}
 		}
 
