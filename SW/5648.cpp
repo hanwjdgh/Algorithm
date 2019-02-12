@@ -11,11 +11,6 @@ int dir[4][2] = { {1,0},{-1,0},{0,-1},{0,1} };
 int N, board[MAX][MAX];
 int atom[1001][4];
 
-void remove(int idx) {
-	swap(atom[idx], atom[N - 1]);
-	--N;
-}
-
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
