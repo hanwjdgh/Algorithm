@@ -1,55 +1,65 @@
 #include <iostream>
 #include <ios>
-#include <cmath>
+#include <cstring>
 
-#define MAX 101
+#define MAX 21
 
 using namespace std;
 
-int road[MAX][MAX];
-int N, L;
+int arr[MAX][MAX];
 
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int ans = 0, j;
-	cin >> N >> L;
+	int T;
 
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
-			cin >> road[i][j];
+	cin >> T;
 
-	for (int i = 0; i < N; i++) {
-		int cnt = 1;
-		for (j = 0; j < N - 1; j++) {
-			if (road[i][j] == road[i][j + 1])
+	for (int t_case = 1; t_case <= T; t_case++) {
+		int N, X, cnt = 0;
+		int i, j;
+
+		cin >> N >> X;
+
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				cin >> arr[i][j];
+
+		for (i = 0; i < N; i++) {
+			int chk = 1;
+			for (j = 0; j < N - 1; j++) {
+				if (arr[i][j] == arr[i][j + 1])
+					chk++;
+				else if (arr[i][j] + 1 == arr[i][j + 1] && chk >= X)
+					chk = 1;
+				else if (arr[i][j] - 1 == arr[i][j + 1] && chk >= 0)
+					chk = -X + 1;
+				else
+					break;
+			}
+			if (j == N - 1 && chk >= 0)
 				cnt++;
-			else if (road[i][j] + 1 == road[i][j + 1] && cnt >= L)
-				cnt = 1;
-			else if (road[i][j] - 1 == road[i][j + 1] && cnt >= 0)
-				cnt = -L + 1;
-			else
-				break;
-		}
-		if (j == N - 1 && cnt >= 0)
-			ans++;
 
-		cnt = 1;
-		for (j = 0; j < N - 1; j++) {
-			if (road[j][i] == road[j + 1][i])
+			chk = 1;
+			for (j = 0; j < N - 1; j++) {
+				if (arr[j][i] == arr[j + 1][i])
+					chk++;
+				else if (arr[j][i] + 1 == arr[j + 1][i] && chk >= X)
+					chk = 1;
+				else if (arr[j][i] - 1 == arr[j + 1][i] && chk >= 0)
+					chk = -X + 1;
+				else
+					break;
+			}
+			if (j == N - 1 && chk >= 0)
 				cnt++;
-			else if (road[j][i] + 1 == road[j + 1][i] && cnt >= L)
-				cnt = 1;
-			else if (road[j][i] - 1 == road[j + 1][i] && cnt >= 0)
-				cnt = -L + 1;
-			else
-				break;
 		}
-		if (j == N - 1 && cnt >= 0)
-			ans++;
+
+		cout << "#" << t_case << " " << cnt << "\n";
 	}
-	cout << ans << "\n";
+
 	return 0;
+
 }
