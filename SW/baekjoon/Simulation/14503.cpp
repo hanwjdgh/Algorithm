@@ -1,10 +1,16 @@
 #include <iostream>
 #include <ios>
+#include <queue>
 
 using namespace std;
 
+typedef struct Robot {
+	int y, x, di;
+};
+
+Robot robot;
 int board[51][51];
-int N, M, r, c, di, cnt;
+int N, M, cnt;
 int dir[4][2] = { { -1,0 },{ 0,1 },{ 1,0 },{ 0,-1 } };
 
 int main() {
@@ -12,39 +18,46 @@ int main() {
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	cin >> N >> M >> r >> c >> di;
+	cin >> N >> M;
+	cin >> robot.y >> robot.x >> robot.di;
 
 	for (int y = 0; y < N; y++)
 		for (int x = 0; x < M; x++)
 			cin >> board[y][x];
 
-	bool find = true;
-	while (find) {
-		find = false;
+	queue <Robot > q;
+	q.push(robot);
 
-		if (!board[r][c]) {
+	while (!q.empty()) {
+		Robot cur = q.front();
+		q.pop();
+
+		int cy = cur.y, cx = cur.x, cdi = cur.di;
+
+		if (!board[cy][cx]) {
 			cnt++;
-			board[r][c] = 2;
+			board[cy][cx] = 2;
 		}
 
 		for (int i = 0; i < 4; i++) {
-			di = (di + 3) % 4;
-			int ny = r + dir[di][0], nx = c + dir[di][1];
-			if (!board[ny][nx]) {
-				r = ny, c = nx;
-				find = true;
-				break;
-			}
+			Robot next;
+			next.di = (cdi + 3 - i) % 4;
+			next.y = cy + dir[next.di][0], next.x = cx + dir[next.di][1];
+
+			if (next.y < 0 || next.x < 0 || next.y >= N || next.x >= M || board[next.y][next.x] != 0)
+				continue;
+			q.push(next);
+			break;
 		}
 
-		if (!find) {
-			di = (di + 2) % 4;
-			int ny = r + dir[di][0], nx = c + dir[di][1];
-			di = (di + 2) % 4;
-			if (board[ny][nx] != 1) {
-				r = ny, c = nx;
-				find = true;
-			}
+		if (q.empty()) {
+			Robot next;
+			next.di = cdi;
+			next.y = cy + dir[(next.di+2)%4][0], next.x = cx + dir[(next.di + 2) % 4][1];
+		
+			if (next.y < 0 || next.x < 0 || next.y >= N || next.x >= M || board[next.y][next.x] == 1)
+				break;
+			q.push(next);
 		}
 	}
 
