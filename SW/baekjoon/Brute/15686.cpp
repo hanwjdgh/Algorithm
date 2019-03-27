@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ios>
-#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -9,19 +8,22 @@ typedef struct Node {
 	int y, x;
 };
 
-vector <Node > temp;
 Node people[2501], chiken[2501];
+int visit[2501];
 int map[51][51];
 int N, M, min_v = 1e9;
 int p_cnt, c_cnt;
 
-void dfs(int cur) {
-	if (temp.size() == M) {
+void dfs(int cur, int cnt) {
+	if (cnt == M) {
 		int min_total = 0;
 		for (int i = 0; i < p_cnt; i++) {
 			int min_dis = 1e9;
-			for (auto n : temp) 
-				min_dis = min(min_dis, abs(people[i].y - n.y) + abs(people[i].x - n.x));
+			for (int j = 0; j < c_cnt; j++) {
+				if (!visit[j])
+					continue;
+				min_dis = min(min_dis, abs(people[i].y - chiken[j].y) + abs(people[i].x - chiken[j].x));
+			}		
 			min_total += min_dis;
 		}
 		min_v = min(min_v, min_total);
@@ -30,9 +32,9 @@ void dfs(int cur) {
 	}
 
 	for (int i = cur; i < c_cnt; i++) {
-		temp.push_back(chiken[i]);
-		dfs(i + 1);
-		temp.pop_back();
+		visit[i] = 1;
+		dfs(i + 1,cnt+1);
+		visit[i] = 0;
 	}
 }
 
@@ -58,7 +60,7 @@ int main() {
 		}
 	}
 
-	dfs(0);
+	dfs(0,0);
 
 	cout << min_v << "\n";
 
