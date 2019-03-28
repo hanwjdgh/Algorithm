@@ -1,104 +1,93 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
 #include <algorithm>
-#include <vector>
 #include <queue>
 
 using namespace std;
 
-typedef pair <int, int > p;
+struct Node {
+	int y, x, val;
+};
 
-vector <int > v;
-int map[16][13], tmp[16][13];
-int N, W, H, min_v = 181;
+Node node;
+int map[16][13], temp[16][13];
+int visit[13];
+int N, W, H, min_v;
 int dir[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
 
-int find_idx(int y) {
+int find_idx(int x) {
 	for (int i = 0; i < H; i++)
-		if (tmp[i][y] != 0)
+		if (temp[i][x] != 0)
 			return i;
 
 	return -1;
 }
 
-void bfs(int x, int y) {
-	if (tmp[x][y] == 1)
-		tmp[x][y] = 0;
-	else {
-		queue <p > q;
-		q.push({ x,y });
-
-		while (!q.empty()) {
-			int cx = q.front().first, cy = q.front().second;
-			q.pop();
-			int t = tmp[cx][cy];
-
-			tmp[cx][cy] = 0;
-			for (int i = 1; i <= t - 1; i++) {
-				for (int j = 0; j < 4; j++) {
-					int nx = cx + dir[j][0] * i, ny = cy + dir[j][1] * i;
-
-					if (nx < 0 || ny < 0 || nx >= H || ny >= W || tmp[nx][ny] == 0)
-						continue;
-
-					if (tmp[nx][ny] != 1)
-						q.push({ nx,ny });
-					else
-						tmp[nx][ny] = 0;
-				}
-			}
-		}
-	}
-}
-
 void convert() {
-	for (int i = H - 1; i > -1; i--) {
-		for (int j = 0; j < W; j++) {
-			if (tmp[i][j] == 0)
+	for (int y = H - 1; y > -1; y--) {
+		for (int x = 0; x < W; x++) {
+			if (temp[y][x] == 0)
 				continue;
 
-			int a = i, b = j;
-			for (int k = i + 1; k < H; k++)
-				if (tmp[k][j] == 0) {
-					a = k, b = j;
-				}
-			swap(tmp[i][j], tmp[a][b]);
+			int a = y, b = x;
+			for (int k = y + 1; k < H; k++)
+				if (temp[k][x] == 0)
+					a = k, b = x;
+			swap(temp[y][x], temp[a][b]);
 		}
 	}
 }
 
-void find(int cnt) {
+void dfs(int cur, int cnt) {
 	if (cnt == N) {
 		if (min_v != 0) {
-			for (int i = 0; i < H; i++)
-				for (int j = 0; j < W; j++)
-					tmp[i][j] = map[i][j];
+			for (int y = 0; y < H; y++)
+				for (int x = 0; x < W; x++)
+					temp[y][x] = map[y][x];
 
 			for (int i = 0; i < N; i++) {
-				int idx = find_idx(v[i]);
+				int idx = find_idx(visit[i]);
 				if (idx == -1)
 					continue;
 
-				bfs(idx, v[i]);
+				node.y = idx, node.x = visit[i], node.val = temp[idx][visit[i]];
+				queue <Node > q;
+				q.push(node);
+
+				while (!q.empty()) {
+					int cy = q.front().y, cx = q.front().x, cval = q.front().val;
+					q.pop();
+					temp[cy][cx] = 0;
+
+					for (int j = 1; j <= cval - 1; j++) {
+						for (int k = 0; k < 4; k++) {
+							Node next;
+							int ny = cy + dir[k][0] * j, nx = cx + dir[k][1] * j;
+							if (ny < 0 || nx < 0 || ny >= H || nx >= W || temp[ny][nx] == 0)
+								continue;
+							next.y = ny, next.x = nx, next.val = temp[ny][nx];
+							q.push(next);
+						}
+					}
+				}
+
 				convert();
 			}
+
 			int cnt = 0;
-
-			for (int i = 0; i < H; i++)
-				for (int j = 0; j < W; j++)
-					if (tmp[i][j] != 0)
+			for (int y = 0; y < H; y++)
+				for (int x = 0; x < W; x++)
+					if (temp[y][x] != 0)
 						cnt++;
-
 			min_v = min(min_v, cnt);
 		}
 		return;
 	}
 
 	for (int i = 0; i < W; i++) {
-		v.push_back(i);
-		find(cnt + 1);
-		v.pop_back();
+		visit[cnt] = i;
+		dfs(i, cnt + 1);
+		visit[cnt] = 0;
 	}
 }
 
@@ -112,18 +101,15 @@ int main() {
 	cin >> T;
 
 	for (int t = 1; t <= T; t++) {
-		memset(map, 0, sizeof(map));
-		memset(tmp, 0, sizeof(tmp));
-		v.clear();
 		min_v = 181;
 
 		cin >> N >> W >> H;
 
-		for (int i = 0; i < H; i++)
-			for (int j = 0; j < W; j++)
-				cin >> map[i][j];
+		for (int y = 0; y < H; y++)
+			for (int x = 0; x < W; x++)
+				cin >> map[y][x];
 
-		find(0);
+		dfs(0, 0);
 
 		cout << "#" << t << " " << min_v << "\n";
 	}
