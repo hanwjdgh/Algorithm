@@ -1,16 +1,18 @@
 #include <iostream>
 #include <ios>
-#include <vector>
-#include <algorithm>
-
-#define MAX 101
+#include <queue>
 
 using namespace std;
 
-typedef pair <int, int > p;
+struct Node {
+	int y, x, d, cnt;
+};
 
-vector <vector <p > > v;
-int N, max_v, board[MAX][MAX];
+struct Holl {
+	int y, x;
+};
+
+Node next_node;
 int block[6][4] = { { 0,0,0,0 },{ 1,3,0,2 },{ 3,2,0,1 },{ 2,0,3,1 },{ 2,3,1,0 },{ 2,3,0,1 } };
 int dir[4][2] = { { 0,-1 },{ -1,0 },{ 0,1 },{ 1,0 } };
 
@@ -24,58 +26,69 @@ int main() {
 	cin >> T;
 
 	for (int t = 1; t <= T; t++) {
-		v.clear();
-		v.resize(5);
-		max_v = 0;
-
+		Holl holl[6][2];
+		int N, max_v = 0, board[101][101] = { 0, };
+		int idx[6] = { 0, };
 		cin >> N;
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				cin >> board[i][j];
-				if (board[i][j] > 5)
-					v[board[i][j] - 6].push_back({ i,j });
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				cin >> board[y][x];
+				if (board[y][x] >= 6) {
+					int temp = board[y][x] - 6;
+					holl[temp][idx[temp]].y = y, holl[temp][idx[temp]].x = x;
+					idx[temp]++;
+				}
 			}
 		}
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (board[i][j] == 0) {
-					for (int k = 0; k < 4; k++) {
-						board[i][j] = -2;
-						int cnt = 0, d = k, nx = i, ny = j;
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				if (board[y][x] != 0)
+					continue;
+				board[y][x] = -2;
+				for (int i = 0; i < 4; i++) {
+					Node node;
+					node.y = y, node.x = x, node.d = i, node.cnt = 0;
+					queue <Node >q;
+					q.push(node);
 
-						while (1) {
-							nx += dir[d][0], ny += dir[d][1];
-							if (nx < 0 || ny < 0 || nx >= N || ny >= N) {
-								cnt++;
-								d = (d + 2) % 4;
-							}
+					while (!q.empty()) {
+						Node cur_node = q.front();
+						next_node.y = cur_node.y + dir[cur_node.d][0], next_node.x = cur_node.x + dir[cur_node.d][1];
+						next_node.d = cur_node.d, next_node.cnt = cur_node.cnt;
 
-							else {
-								int num = board[nx][ny];
+						int temp = board[next_node.y][next_node.x];
+						q.pop();
 
-								if (num == -1 || num == -2) 
-									break;
-								else if (num == 0)
-									continue;
-								else if (num >= 1 && num <= 5) {
-									cnt++;
-									d = block[num][d];
-								}
-								else {
-									if (v[num - 6][0].first == nx && v[num - 6][0].second == ny)
-										nx = v[num - 6][1].first, ny = v[num - 6][1].second;
-									else
-										nx = v[num - 6][0].first, ny = v[num - 6][0].second;
-								}
-							}
+						if (next_node.y < 0 || next_node.x < 0 || next_node.y >= N || next_node.x >= N) {
+							next_node.d = ((cur_node.d + 2) % 4), next_node.cnt++;
+							q.push(next_node);
+							continue;
+						}
+						if (temp == -1 || temp == -2) {
+							max_v = max(max_v, cur_node.cnt);
+							continue;
 						}
 
-						max_v = max(max_v, cnt);
-						board[i][j] = 0;
+						if (temp == 0) {
+							next_node.d = cur_node.d, next_node.cnt = cur_node.cnt;
+							q.push(next_node);
+						}
+						else if (temp >= 1 && temp <= 5) {
+							next_node.d = block[temp][cur_node.d], next_node.cnt++;
+							q.push(next_node);
+						}
+						else {
+							if (holl[temp - 6][0].y == next_node.y && holl[temp - 6][0].x == next_node.x) 
+								next_node.y = holl[temp - 6][1].y, next_node.x = holl[temp - 6][1].x;
+							else 
+								next_node.y = holl[temp - 6][0].y, next_node.x = holl[temp - 6][0].x;
+							q.push(next_node);
+						}
 					}
 				}
+				board[y][x] = 0;
 			}
 		}
 
