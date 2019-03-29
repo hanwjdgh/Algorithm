@@ -1,22 +1,22 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
 #include <queue>
-#include <tuple>
 #include <algorithm>
-#include <functional>
-
-#define MAX 1002
 
 using namespace std;
 
-typedef pair <int, int > p;
-typedef tuple <int, int, int > t;
+struct Node {
+	int y, x, val, cnt;
+};
 
-vector <t > v;
+bool operator<(Node a, Node b) {
+	return (a.val > b.val);
+}
+
+Node node[2501];
 int dir[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
 int N, M, K;
-int cell[MAX][MAX], pr[MAX][MAX];
+int cell[1002][1002];
 
 int main() {
 	cin.tie(NULL);
@@ -28,59 +28,59 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		memset(cell, 0, sizeof(cell));
-		memset(pr, 0, sizeof(pr));
-		queue <t > q;
-		v.clear();
-
+		queue <Node > q;
+		int idx = 0;
 		cin >> N >> M >> K;
 
-		for (int i = 301; i < 301 + N; i++) {
-			for (int j = 301; j < 301 + M; j++) {
-				cin >> cell[i][j];
-				if (cell[i][j] != 0)
-					v.push_back(make_tuple(cell[i][j], i, j));
+		for (int y = 301; y < 301 + N; y++) {
+			for (int x = 301; x < 301 + M; x++) {
+				cin >> cell[y][x];
+				if (cell[y][x] != 0) {
+					node[idx].y = y, node[idx].x = x, node[idx].val = cell[y][x], node[idx++].cnt = 0;
+				}
 			}
 		}
 
-		sort(v.begin(), v.end(), greater<t >());
+		sort(node, node + idx);
 
-		for (auto n : v)
-			q.push(n);
+		for (int i = 0; i < idx; i++)
+			q.push(node[i]);
 
 		for (int i = 0; i < K; i++) {
 			int s = q.size();
 			for (int j = 0; j < s; j++) {
-				int t = get<0>(q.front()), x = get<1>(q.front()), y = get<2>(q.front());
+				Node cur_node = q.front();
 				q.pop();
 
-				pr[x][y]++;
-				if (t + 1 == pr[x][y]) {
-					for (int i = 0; i < 4; i++) {
-						int nx = x + dir[i][0], ny = y + dir[i][1];
-						if (pr[nx][ny] != 0 || cell[nx][ny] != 0)
+				cur_node.cnt++;
+				if (cur_node.cnt == cell[cur_node.y][cur_node.x]+1) {
+					for (int k = 0; k < 4; k++) {
+						Node next_node;
+						next_node.y = cur_node.y + dir[k][0], next_node.x = cur_node.x + dir[k][1];
+						next_node.val = cell[cur_node.y][cur_node.x], next_node.cnt = 0;
+						if (cell[next_node.y][next_node.x] != 0)
 							continue;
-						cell[nx][ny] = t;
-						q.push(make_tuple(cell[nx][ny], nx, ny));
-
+						cell[next_node.y][next_node.x] = cell[cur_node.y][cur_node.x];
+						q.push(next_node);
 					}
 				}
-
-				if (pr[x][y] == cell[x][y] * 2) {
-					cell[x][y] = -1;
+				
+				if (cur_node.cnt == cell[cur_node.y][cur_node.x] * 2) {
+					cell[cur_node.y][cur_node.x] = -1;
 					continue;
 				}
-
-				q.push(make_tuple(t, x, y));
+				q.push(cur_node);
 			}
 		}
 
 		int cnt = 0;
-
-		for (int i = 0; i < MAX; i++)
-			for (int j = 0; j < MAX; j++)
-				if (cell[i][j] > 0)
+		for (int y = 0; y < 1002; y++) {
+			for (int x = 0; x < 1002; x++) {
+				if (cell[y][x] > 0) 
 					cnt++;
+				cell[y][x] = 0;
+			}
+		}
 
 		cout << "#" << t_case << " " << cnt << "\n";
 	}
