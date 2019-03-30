@@ -1,111 +1,85 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
-#include <vector>
 #include <algorithm>
 #include <queue>
 
-#define MAX 11
-
 using namespace std;
 
-typedef pair <int, int > p;
+struct People {
+	int y, x, st, dis, w_time, r_time;
+};
 
-vector <p > peo, st;
-vector <int > ans, fs, ss;
-int bang[MAX][MAX];
-int N, min_v = 1e9, pcnt;
+struct Stair {
+	int y, x, len;
+};
 
-void down() {
-	int cnt = 0, idx = 0, iidx = 0;
-	int fx = st[0].first, fy = st[0].second;
-	int sx = st[1].first, sy = st[1].second;
-	queue <p > wfq, fdq;
-	queue <p > wsq, sdq;
-
-	while (1) {
-		int a = wfq.size(), b = fdq.size(), c = wsq.size(), d = sdq.size();
-		for (int i = idx; i < fs.size(); i++) {
-			if (fs[i] == cnt) {
-				wfq.push({ i,0 });
-				idx++;
-			}
-		}
-
-		for (int i = iidx; i < ss.size(); i++) {
-			if (ss[i] == cnt) {
-				wsq.push({ i,0 });
-				iidx++;
-			}
-		}
-
-		for (int i = 0; i < a; i++) {
-			int cur = wfq.front().first, wait = wfq.front().second;
-			wfq.pop();
-
-			if (wait == 0 || fdq.size() >= 3) {
-				wfq.push({ cur,1 });
-				continue;
-			}
-			fdq.push({ cur,1 });
-		}
-
-		for (int i = 0; i < c; i++) {
-			int cur = wsq.front().first, wait = wsq.front().second;
-			wsq.pop();
-
-			if (wait == 0 || sdq.size() >= 3) {
-				wsq.push({ cur,1 });
-				continue;
-			}
-			sdq.push({ cur,1 });
-		}
-
-		for (int i = 0; i < b; i++) {
-			int cur = fdq.front().first, wait = fdq.front().second;
-			fdq.pop();
-
-			if (wait + 1 != bang[fx][fy])
-				fdq.push({ cur,wait + 1 });
-		}
-
-		for (int i = 0; i < d; i++) {
-			int cur = sdq.front().first, wait = sdq.front().second;
-			sdq.pop();
-
-			if (wait + 1 != bang[sx][sy])
-				sdq.push({ cur,wait + 1 });
-		}
-		if (fdq.size() == 0 && wfq.size() == 0 && idx == fs.size() && sdq.size() == 0 && wsq.size() == 0 && iidx == ss.size())
-			break;
-		cnt++;
+bool operator<(People a, People b) {
+	if (a.r_time > b.r_time)
+		return true;
+	else if (a.r_time == b.r_time) {
+		if (a.dis > b.dis)
+			return true;
 	}
-	min_v = min(min_v, cnt);
+	return false;
 }
 
-void find(int cur) {
-	if (cur == pcnt) {
-		fs.clear();
-		ss.clear();
+People people[11];
+Stair stair[2];
+int p_cnt, st_cnt, min_v = 1e9;
+int N, map[11][11], visit[11];
 
-		for (int i = 0; i < pcnt; i++) {
-			if (ans[i] == 0)
-				fs.push_back(abs(peo[i].first - st[0].first) + abs(peo[i].second - st[0].second));
-			else
-				ss.push_back(abs(peo[i].first - st[1].first) + abs(peo[i].second - st[1].second));
+void dfs(int cur) {
+	if (cur == p_cnt) {
+		priority_queue <People > pq;
+
+		for (int i = 0; i < cur; i++) {
+			people[i].st = visit[i];
+			people[i].dis = abs(people[i].y - stair[visit[i]].y) + abs(people[i].x - stair[visit[i]].x);
+			pq.push(people[i]);
 		}
-		sort(fs.begin(), fs.end());
-		sort(ss.begin(), ss.end());
 
-		down();
+		int val = 0;
+		int wait[2] = { 0, };
+		while (!pq.empty()) {
+			People cur_peo = pq.top();
+			pq.pop();
 
+			val = cur_peo.r_time;
+			cur_peo.r_time += 1;
+
+			if (cur_peo.dis >= val) {
+				pq.push(cur_peo);
+				continue;
+			}
+
+			if (cur_peo.w_time != 0) {
+				if (cur_peo.w_time == stair[cur_peo.st].len) {
+					wait[cur_peo.st]--;
+					continue;
+				}
+				cur_peo.w_time += 1;
+				pq.push(cur_peo);
+				continue;
+			}
+
+			if (wait[cur_peo.st] == 3) {
+				pq.push(cur_peo);
+			}
+			else {
+				wait[cur_peo.st]++;
+				cur_peo.w_time += 1;
+				pq.push(cur_peo);
+			}
+		}
+
+		min_v = min(min_v, val);
 		return;
 	}
 
 	for (int i = 0; i < 2; i++) {
-		ans.push_back(i);
-		find(cur + 1);
-		ans.pop_back();
+		visit[cur] = i;
+		dfs(cur + 1);
+		visit[cur] = 0;
 	}
 }
 
@@ -119,32 +93,26 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		ans.clear();
-		peo.clear();
-		memset(bang, 0, sizeof(bang));
-		pcnt = 0, min_v = 1e9;
-		st.clear();
-		peo.clear();
-
+		p_cnt = st_cnt = 0;
+		min_v = 1e9;
 		cin >> N;
 
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				cin >> bang[i][j];
-				if (bang[i][j] == 1) {
-					pcnt++;
-					peo.push_back({ i,j });
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				cin >> map[y][x];
+				if (map[y][x] == 1) {
+					people[p_cnt].y = y, people[p_cnt++].x = x;
+					people[p_cnt].st = people[p_cnt].w_time = people[p_cnt].dis = people[p_cnt].r_time = 0;
 				}
-				else if (bang[i][j] > 1)
-					st.push_back({ i,j });
+				else if (map[y][x] > 1)
+					stair[st_cnt].y = y, stair[st_cnt].x = x, stair[st_cnt++].len = map[y][x];
 			}
 		}
 
-		find(0);
+		dfs(0);
 
 		cout << "#" << t_case << " " << min_v << "\n";
 	}
 
 	return 0;
-
 }
