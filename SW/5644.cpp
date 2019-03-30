@@ -1,47 +1,48 @@
 #include <iostream>
 #include <ios>
-#include <string>
-#include <vector>
+#include <cstring>
 #include <algorithm>
 
 using namespace std;
 
-typedef pair <int, int > p;
+struct Node {
+	int y, x;
+};
 
-vector <p > v;
-vector <int > ans;
-int dir[5][2] = { {0,0}, {0,-1},{1,0},{0,1},{-1,0} };
-int dis[9], power[9];
-int peo[2][2] = { {1,1}, {10,10} };
-int M, A;
+struct BC {
+	int y, x, c, p;
+};
 
-int find(int cnt, int idx) {
+Node node[2];
+BC bc[9];
+int A_move[101], B_move[101], near[2];
+int dir[5][2] = { {0,0},{-1,0},{0,1},{1,0},{0,-1} };
+int M, A, map[11][11], temp;
+
+void dfs(int idx, int cnt) {
 	if (cnt == 2) {
-		int cnt = 0;
-		if (ans[0] == ans[1])
-			cnt += power[ans[0]];
+		int val = 0;
+		if (near[0] == near[1])
+			val += bc[near[0]].p;
 		else
-			cnt += (power[ans[0]] + power[ans[1]]);
-		return cnt;
+			val += (bc[near[0]].p + bc[near[1]].p);
+		temp = max(temp, val);
+		return;
 	}
 
-	int val = 0;
-	bool err = true;
+	bool find = false;
 	for (int i = 1; i <= A; i++) {
-		if (dis[i] >= (abs(peo[idx][0] - v[i - 1].first) + abs(peo[idx][1] - v[i - 1].second))) {
-			ans.push_back(i);
-			val = max(val, find(cnt + 1, idx + 1));
-			ans.pop_back();
-			err = false;
+		if (bc[i].c >= (abs(node[idx].y-bc[i].y)+abs(node[idx].x-bc[i].x))) {
+			near[idx] = i;
+			dfs(idx + 1, cnt + 1);
+			near[idx] = 0;
+			find = true;
 		}
 	}
-	if (err) {
-		ans.push_back(0);
-		val = max(val, find(cnt + 1, idx + 1));
-		ans.pop_back();
+	if (!find) {
+		near[idx] = 0;
+		dfs(idx + 1, cnt + 1);
 	}
-
-	return val;
 }
 
 int main() {
@@ -54,45 +55,31 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		fill(dis, dis + 9, 0);
-		fill(power, power + 9, 0);
-		string str;
-		vector <int > A_move, B_move;
-		int x, y, c, p, max_v = 0;
-		peo[0][0] = peo[0][1] = 1;
-		peo[1][0] = peo[1][1] = 10;
+		memset(map, 0, sizeof(map));
+		int max_v = 0;
+		node[0].x = node[0].y = 1;
+		node[1].x = node[1].y = 10;
 
-		A_move.push_back(0);
-		B_move.push_back(0);
-		v.clear();
 		cin >> M >> A;
 
-		cin.ignore();
-		getline(cin, str);
-		for (int i = 0; i < str.length(); i++)
-			if (i % 2 == 0)
-				A_move.push_back(str[i] - '0');
+		for (int i = 1; i <= M; i++)
+			cin >> A_move[i];
+		for (int i = 1; i <= M; i++)
+			cin >> B_move[i];
 
-		getline(cin, str);
-		for (int i = 0; i < str.length(); i++)
-			if (i % 2 == 0)
-				B_move.push_back(str[i] - '0');
-
-		for (int i = 1; i <= A; i++) {
-			cin >> x >> y >> c >> p;
-			v.push_back({ x,y });
-			dis[i] = c, power[i] = p;
-		}
+		for (int i = 1; i <= A; i++)
+			cin >> bc[i].x >> bc[i].y >> bc[i].c >> bc[i].p;
 
 		for (int i = 0; i <= M; i++) {
-			peo[0][0] += dir[A_move[i]][0], peo[0][1] += dir[A_move[i]][1];
-			peo[1][0] += dir[B_move[i]][0], peo[1][1] += dir[B_move[i]][1];
-			max_v += find(0, 0);
+			node[0].y += dir[A_move[i]][0], node[0].x += dir[A_move[i]][1];
+			node[1].y += dir[B_move[i]][0], node[1].x += dir[B_move[i]][1];
+			temp = 0;
+			dfs(0, 0);
+			max_v += temp;
 		}
 
 		cout << "#" << t_case << " " << max_v << "\n";
 	}
 
 	return 0;
-
 }
