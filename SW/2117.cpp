@@ -1,18 +1,17 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
 #include <vector>
 #include <algorithm>
 
-#define MAX 22
-
 using namespace std;
 
-typedef pair <int, int > p;
+struct House {
+	int y, x;
+};
 
-int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
-int cost[MAX];
-int city[MAX][MAX];
+House house[401];
+int dir[4][2] = { { -1,0 },{ 1,0 },{ 0,-1 },{ 0,1 } };
+int cost[22], city[21][21];
 int N, M;
 
 int main() {
@@ -28,38 +27,32 @@ int main() {
 		cost[i] = i * i + (i - 1)*(i - 1);
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		vector <p > v;
-		int cnt = 0, K;
+		int cnt = 0, K, idx = 0;
 		cin >> N >> M;
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				cin >> city[i][j];
-				if (city[i][j] == 1) {
-					cnt++;
-					v.push_back({ i,j });
-				}
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				cin >> city[y][x];
+				if (city[y][x] == 1)
+					house[idx].y = y, house[idx++].x = x;
 			}
 		}
 
 		for (K = 21; K > -1; K--)
-			if (cost[K] <= cnt*M)
+			if (cost[K] <= idx*M)
 				break;
 
-		cnt = 0;
 		while (K > 0) {
+			cout << K << endl;
 			int hcnt = 0;
 
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < N; x++) {
 					int chk = 0;
-					int cx = i, cy = j;
-					for (int k = 0; k < v.size(); k++) {
-						int nx = v[k].first, ny = v[k].second;
 
-						if ((abs(cx - nx) + abs(cy - ny)) <= K - 1)
+					for (int i = 0; i < idx; i++)
+						if ((abs(y - house[i].y) + abs(x - house[i].x)) <= K - 1)
 							chk++;
-					}
 					if (cost[K] <= chk*M)
 						hcnt = max(hcnt, chk);
 				}
