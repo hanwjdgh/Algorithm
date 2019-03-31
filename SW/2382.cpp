@@ -1,18 +1,20 @@
 #include <iostream>
 #include <ios>
 #include <cstring>
-#include <tuple>
-#include <vector>
-
-#define MAX 101
+#include <queue>
 
 using namespace std;
 
-typedef tuple <int, int, int, int > t;
+struct Node {
+	int y, x, val;
+};
 
-int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+Node node[10001];
+
+int cell[101][101][1001];
+int d[101][101][1001], visit[101][101];
+int dir[5][2] = { { -1,0 },{ 1,0 },{ 0,-1 },{ 0,1 } };
 int N, M, K;
-int visit[MAX][MAX][2];
 
 int main() {
 	cin.tie(NULL);
@@ -24,50 +26,57 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
+		memset(cell, 0, sizeof(cell));
+		memset(d, 0, sizeof(d));
 		memset(visit, 0, sizeof(visit));
-		int a, b, c, d;
-		vector <t > v;
+
+		queue <Node > q;
+		int ans = 0;
 
 		cin >> N >> M >> K;
-	
+
 		for (int i = 0; i < K; i++) {
-			cin >> a >> b >> c >> d;
-			v.push_back({ make_tuple(a,b,c,d - 1) });
+			int num;
+			cin >> node[i].y >> node[i].x >> node[i].val >> num;
+			cell[node[i].y][node[i].x][0] = node[i].val;
+			d[node[i].y][node[i].x][0] = num - 1;
+			q.push(node[i]);
 		}
 
-		while (M--) {
+		for (int i = 1; i <= M + 1; i++) {
 			memset(visit, 0, sizeof(visit));
-			for (int i = 0; i < K; i++) {
-				int cx = get<0>(v[i]), cy = get<1>(v[i]);
-				if (get<2>(v[i]) == 0)
+			int qs = q.size();
+			for (int j = 0; j < qs; j++) {
+				Node cur_node = q.front();
+				int cd = d[cur_node.y][cur_node.x][i - 1];
+				q.pop();
+
+				if (i == M + 1) {
+					ans += cell[cur_node.y][cur_node.x][M];
 					continue;
-
-				int nx = cx + dir[get<3>(v[i])][0], ny = cy + dir[get<3>(v[i])][1];
-				get<0>(v[i]) = nx, get<1>(v[i]) = ny;
-				if (nx == 0 || ny == 0 || nx == N - 1 || ny == N - 1)
-					get<3>(v[i]) = (5 - get<3>(v[i])) % 4, get<2>(v[i]) /= 2;
-
-				if (visit[nx][ny][0] == 0) {
-					visit[nx][ny][0] = get<2>(v[i]);
-					visit[nx][ny][1] = i;
 				}
-				else {
-					int idx = visit[nx][ny][1];
-					get<2>(v[idx]) += get<2>(v[i]);
+				Node next_node = cur_node;
+				next_node.y += dir[cd][0], next_node.x += dir[cd][1];
+				next_node.val = cell[cur_node.y][cur_node.x][i - 1];
 
-					if (visit[nx][ny][0] < get<2>(v[i])) {
-						visit[nx][ny][0] = get<2>(v[i]);
-						get<3>(v[idx]) = get<3>(v[i]);
-					}
-					get<2>(v[i]) = 0;
+				if (next_node.y == 0 || next_node.x == 0 || next_node.y == N - 1 || next_node.x == N - 1) 
+					cd = (5 - cd) % 4, next_node.val /= 2;
+
+				d[cur_node.y][cur_node.x][i - 1] = 0;
+				if (visit[next_node.y][next_node.x] == 0) {
+					d[next_node.y][next_node.x][i] = cd;
+					visit[next_node.y][next_node.x] = next_node.val;
+					q.push(next_node);
 				}
+				else if (visit[next_node.y][next_node.x] < next_node.val) {
+					d[next_node.y][next_node.x][i] = cd;
+					visit[next_node.y][next_node.x] = next_node.val;
+				}
+
+				cell[next_node.y][next_node.x][i] += next_node.val;
 			}
-
 		}
-		int ans = 0;
-		for (int i = 0; i < K; i++) 
-			ans += get<2>(v[i]);
-		
+
 		cout << "#" << t_case << " " << ans << "\n";
 	}
 
