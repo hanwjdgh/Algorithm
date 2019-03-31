@@ -1,46 +1,41 @@
 #include <iostream>
 #include <ios>
-#include <vector>
 #include <algorithm>
-#include <cstring>
 
 using namespace std;
 
-int film[14][21], temp[14][21];
+int film[14][21], visit[14];
 int D, W, K, min_v;
-vector <int > ans;
 
-void copy_arr() {
-	for (int i = 0; i < D; i++)
-		for (int j = 0; j < W; j++)
-			temp[i][j] = film[i][j];
-}
-
-void find(int cnt, int cur, int num) {
+void dfs(int cnt, int num) {
 	if (num >= min_v)
 		return;
-	if (cur == cnt) {
-		copy_arr();
+	if (cnt == D) {
+		int temp[14][21];
 
-		for (int i = 0; i < ans.size(); i++) {
-			if (ans[i] == 0)
+		for (int y = 0; y < D; y++)
+			for (int x = 0; x < W; x++)
+				temp[y][x] = film[y][x];
+
+		for (int i = 0; i < cnt; i++) {
+			if (visit[i] == 0)
 				continue;
 			for (int j = 0; j < W; j++)
-				temp[i][j] = ans[i];
+				temp[i][j] = visit[i];
 		}
 
 		bool err = false;
-		for (int i = 0; i < W; i++) {
-			int num = 1;
-			for (int j = 0; j < D - 1; j++) {
-				if (temp[j][i] == temp[j + 1][i])
-					num++;
+		for (int y = 0; y < W; y++) {
+			int chk = 1;
+			for (int x = 0; x < D - 1; x++) {
+				if (temp[x][y] == temp[x + 1][y])
+					chk++;
 				else
-					num = 1;
-				if (num == K)
+					chk = 1;
+				if (chk == K)
 					break;
 			}
-			if (num != K) {
+			if (chk != K) {
 				err = true;
 				break;
 			}
@@ -53,12 +48,12 @@ void find(int cnt, int cur, int num) {
 	}
 
 	for (int i = 0; i < 3; i++) {
-		ans.push_back(i);
+		visit[cnt] = i;
 		if (i == 0)
-			find(cnt + 1, cur, num);
+			dfs(cnt + 1, num);
 		else
-			find(cnt + 1, cur, num + 1);
-		ans.pop_back();
+			dfs(cnt + 1, num + 1);
+		visit[cnt] = 0;
 	}
 }
 
@@ -72,19 +67,17 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		memset(film, 0, sizeof(film));
-		memset(temp, 0, sizeof(temp));
 		cin >> D >> W >> K;
 
 		min_v = D + 1;
-		for (int i = 0; i < D; i++) {
-			for (int j = 0; j < W; j++) {
-				cin >> film[i][j];
-				film[i][j] += 1;
+		for (int y = 0; y < D; y++) {
+			for (int x = 0; x < W; x++) {
+				cin >> film[y][x];
+				film[y][x]++;
 			}
 		}
 
-		find(0, D, 0);
+		dfs(0, 0);
 
 		cout << "#" << t_case << " " << min_v << "\n";
 	}
