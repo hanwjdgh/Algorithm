@@ -4,32 +4,30 @@
 
 using namespace std;
 
-int dir[4][2] = { {1,-1},{1,1},{-1,1},{-1,-1} };
-int mp[21][21], visit[21][21];
-int N, disit[101], max_v = -1;
-int sx, sy;
+int dir[4][2] = { { 1,-1 },{ 1,1 },{ -1,1 },{ -1,-1 } };
+int map[21][21], visit[21][21], dessert[101];
+int N, max_v;
 
-void find(int x, int y, int cnt, int d) {
+void dfs(int sy, int sx, int y, int x, int d, int cnt) {
 	if (d == 4)
 		return;
 
-	int nx = x + dir[d][0], ny = y + dir[d][1];
+	int ny = y + dir[d][0], nx = x + dir[d][1];
 
-	if (nx < 0 || ny < 0 || nx >= N || ny >= N)
+	if (ny < 0 || nx < 0 || ny >= N || nx >= N)
 		return;
 
-	if (visit[nx][ny] || disit[mp[nx][ny]]) {
-		if (nx == sx && ny == sy)
+	if (visit[ny][nx] || dessert[map[ny][nx]]) {
+		if (sy == ny && sx == nx) 
 			max_v = max(max_v, cnt);
 		return;
 	}
 
-	visit[nx][ny] = disit[mp[nx][ny]] = 1;
-	find(nx, ny, cnt + 1, d);
-	find(nx, ny, cnt + 1, d + 1);
-	visit[nx][ny] = disit[mp[nx][ny]] = 0;
+	visit[ny][nx] = dessert[map[ny][nx]] = 1;
+	dfs(sy, sx, ny, nx, d, cnt + 1);
+	dfs(sy, sx, ny, nx, d+1, cnt + 1);
+	visit[ny][nx] = dessert[map[ny][nx]] = 0;
 }
-
 
 int main() {
 	cin.tie(NULL);
@@ -41,20 +39,18 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		max_v = -1;
-
 		cin >> N;
 
-		for (int i = 0; i < N; i++)
-			for (int j = 0; j < N; j++)
-				cin >> mp[i][j];
+		max_v = -1;
+		for (int y = 0; y < N; y++)
+			for (int x = 0; x < N; x++)
+				cin >> map[y][x];
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				visit[i][j] = disit[mp[i][j]] = 1;
-				sx = i, sy = j;
-				find(i, j, 1, 0);
-				visit[i][j] = disit[mp[i][j]] = 0;
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				visit[y][x] = dessert[map[y][x]] = 1;
+				dfs(y, x, y, x, 0, 1);
+				visit[y][x] = dessert[map[y][x]] = 0;
 			}
 		}
 
