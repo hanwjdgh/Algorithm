@@ -1,16 +1,18 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
 #include <queue>
 
 using namespace std;
 
-typedef pair <int, int > p;
+struct Node {
+	int y, x;
+};
 
-int mp[51][51][4], visit[51][51];
-int dir[4][2] = { {1,0},{0,1},{-1,0},{0,-1} };
-int pipe[8][4] = { {0,0,0,0},{1,1,1,1},{1,0,1,0},{0,1,0,1},{0,1,1,0},{1,1,0,0},{1,0,0,1},{0,0,1,1} };
-int N, M, R, C, L;
+Node node;
+int map[51][51][4];
+int dir[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
+int pipe[8][4] = { { 0,0,0,0 },{ 1,1,1,1 },{ 1,0,1,0 },{ 0,1,0,1 },{ 0,1,1,0 },{ 1,1,0,0 },{ 1,0,0,1 },{ 0,0,1,1 } };
+int N, M, R, C, L, num;
 
 int main() {
 	cin.tie(NULL);
@@ -22,47 +24,44 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		memset(visit, 0, sizeof(visit));
-		memset(mp, 0, sizeof(mp));
-		queue <p > q;
-		int num, ans = 0;
+		int visit[51][51] = { 0, };
+		int ans = 1;
+		queue <Node > q;
+		
+		cin >> N >> M >> node.y >> node.x >> L;
 
-		cin >> N >> M >> R >> C >> L;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < M; x++) {
 				cin >> num;
-
-				for (int k = 0; k < 4; k++)
-					mp[i][j][k] = pipe[num][k];
+				
+				for (int i = 0; i < 4; i++)
+					map[y][x][i] = pipe[num][i];
 			}
 		}
 
-		q.push({ R,C });
-		visit[R][C] = 1;
-		ans = 1;
+		visit[node.y][node.x] = 1;
+		q.push(node);
 
-		L -= 1;
-		while (L--) {
-			int s = q.size();
-
-			for (int i = 0; i < s; i++) {
-				int cx = q.front().first, cy = q.front().second;
+		for (int i = 1; i < L; i++) {
+			int qs = q.size();
+			for (int j = 0; j < qs; j++) {
+				Node cur_node = q.front();
 				q.pop();
 
-				for (int j = 0; j < 4; j++) {
-					if (mp[cx][cy][j] == 0)
+				for (int k = 0; k < 4; k++) {
+					if (map[cur_node.y][cur_node.x][k] == 0) 
+						continue;
+					
+					Node next_node;
+					next_node.y = cur_node.y + dir[k][0], next_node.x = cur_node.x + dir[k][1];
+			
+					if (next_node.y < 0 || next_node.x < 0 || next_node.y >= N || next_node.x >= M || visit[next_node.y][next_node.x]) 
 						continue;
 
-					int nx = cx + dir[j][0], ny = cy + dir[j][1];
-					if (nx < 0 || ny < 0 || nx >= N || ny >= M || visit[nx][ny])
-						continue;
-
-					int td = (j + 2) % 4;
-
-					if (mp[nx][ny][td]) {
+					if (map[next_node.y][next_node.x][(k + 2) % 4]) {
 						ans++;
-						q.push({ nx,ny });
-						visit[nx][ny] = 1;
+						q.push(next_node);
+						visit[next_node.y][next_node.x] = 1;
 					}
 				}
 			}
