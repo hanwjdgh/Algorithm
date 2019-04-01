@@ -4,34 +4,33 @@
 
 using namespace std;
 
-int mount[9][9], visit[9][9];
-int dir[4][2] = { {1,0},{0,1},{-1,0},{0,-1} };
-int N, K, ans, chk;
+int dir[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
+int map[9][9], visit[9][9];
+int N, K, ans;
 
-void find(int x, int y, int len) {
-	ans = max(ans, len);
+void dfs(int y, int x, int cnt, int chk) {
+	ans = max(ans, cnt);
 
 	for (int i = 0; i < 4; i++) {
-		int nx = x + dir[i][0], ny = y + dir[i][1];
+		int ny = y + dir[i][0], nx = x + dir[i][1];
 
-		if (nx < 0 || ny < 0 || nx >= N || ny >= N || visit[nx][ny])
+		if (ny < 0 || nx < 0 || ny >= N || nx >= N || visit[ny][nx]) 		
 			continue;
 
-		if (mount[nx][ny] < mount[x][y]) {
-			visit[nx][ny] = 1;
-			find(nx, ny, len + 1);
-			visit[nx][ny] = 0;
+		if (map[y][x] > map[ny][nx]) {
+			visit[ny][nx] = 1;
+			dfs(ny, nx, cnt + 1, chk);
+			visit[ny][nx] = 0;
 		}
+
 		else {
 			for (int j = 1; j <= K; j++) {
-				if (!chk && mount[nx][ny] - j < mount[x][y]) {
-					visit[nx][ny] = 1;
-					chk = 1;
-					mount[nx][ny] -= j;
-					find(nx, ny, len + 1);
-					chk = 0;
-					mount[nx][ny] += j;
-					visit[nx][ny] = 0;
+				if (!chk && map[ny][nx] - j < map[y][x]) {
+					visit[ny][nx] = 1;
+					map[ny][nx] -= j;
+					dfs(ny, nx, cnt + 1,1);
+					map[ny][nx] += j;
+					visit[ny][nx] = 0;
 				}
 			}
 		}
@@ -48,24 +47,24 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		int max_v = 0;
-		ans = chk = 0;
+		int max_val = 0;
+		ans = 0;
 
 		cin >> N >> K;
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				cin >> mount[i][j];
-				max_v = max(max_v, mount[i][j]);
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				cin >> map[y][x];
+				max_val = max(max_val, map[y][x]);
 			}
 		}
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (mount[i][j] == max_v) {
-					visit[i][j] = 1;
-					find(i, j, 1);
-					visit[i][j] = 0;
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				if (map[y][x] == max_val) {
+					visit[y][x] = 1;
+					dfs(y, x, 1, 0);
+					visit[y][x] = 0;
 				}
 			}
 		}
