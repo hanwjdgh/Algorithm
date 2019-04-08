@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ios>
 #include <queue>
-#include <cstring>
+#include <memory.h>
 
 using namespace std;
 
@@ -10,7 +10,7 @@ struct Atom {
 };
 
 Atom atom[1001];
-int dir[4][2] = { {1,0},{-1,0},{0,-1},{0,1} };
+int dir[4][2] = { { 1,0 },{ -1,0 },{ 0,-1 },{ 0,1 } };
 int N, board[4001][4001];
 
 int main() {
@@ -24,6 +24,7 @@ int main() {
 
 	for (int t_case = 1; t_case <= T; t_case++) {
 		memset(board, 0, sizeof(board));
+
 		queue <Atom > q;
 		int cnt = 0;
 
@@ -36,6 +37,7 @@ int main() {
 			board[atom[i].y][atom[i].x] = atom[i].e;
 			q.push(atom[i]);
 		}
+
 		while (!q.empty()) {
 			Atom cur_atom = q.front();
 			q.pop();
@@ -49,7 +51,7 @@ int main() {
 			Atom next_atom = cur_atom;
 			next_atom.y += dir[next_atom.d][0], next_atom.x += dir[next_atom.d][1];
 
-			if (next_atom.y < 0 || next_atom.x < 0 || next_atom.y >= 4001 || next_atom.x >= 4001) {
+			if (next_atom.y < 0 || next_atom.x < 0 || next_atom.y >= 4000 || next_atom.x >= 4000) {
 				board[cur_atom.y][cur_atom.x] = 0;
 				continue;
 			}
@@ -59,9 +61,8 @@ int main() {
 				board[next_atom.y][next_atom.x] = next_atom.e;
 				q.push(next_atom);
 			}
-			else {
+			else 
 				board[next_atom.y][next_atom.x] += next_atom.e;
-			}
 		}
 
 		cout << "#" << t_case << " " << cnt << "\n";

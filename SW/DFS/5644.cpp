@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ios>
-#include <cstring>
 #include <algorithm>
 
 using namespace std;
@@ -16,8 +15,8 @@ struct BC {
 Node node[2];
 BC bc[9];
 int A_move[101], B_move[101], near[2];
-int dir[5][2] = { {0,0},{-1,0},{0,1},{1,0},{0,-1} };
-int M, A, map[11][11], temp;
+int dir[5][2] = { { 0,0 },{ -1,0 },{ 0,1 },{ 1,0 },{ 0,-1 } };
+int M, A, temp;
 
 void dfs(int idx, int cnt) {
 	if (cnt == 2) {
@@ -32,7 +31,7 @@ void dfs(int idx, int cnt) {
 
 	bool find = false;
 	for (int i = 1; i <= A; i++) {
-		if (bc[i].c >= (abs(node[idx].y-bc[i].y)+abs(node[idx].x-bc[i].x))) {
+		if (bc[i].c >= (abs(node[idx].y - bc[i].y) + abs(node[idx].x - bc[i].x))) {
 			near[idx] = i;
 			dfs(idx + 1, cnt + 1);
 			near[idx] = 0;
@@ -55,8 +54,8 @@ int main() {
 	cin >> T;
 
 	for (int t_case = 1; t_case <= T; t_case++) {
-		memset(map, 0, sizeof(map));
 		int max_v = 0;
+
 		node[0].x = node[0].y = 1;
 		node[1].x = node[1].y = 10;
 

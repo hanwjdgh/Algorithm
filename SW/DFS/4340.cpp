@@ -9,9 +9,7 @@ int N, ans;
 void dfs(int y, int x, int d, int cnt) {
 	if (y == 0 && x == 0) {
 		if (ans > cnt) {
-			if (map[y][x] < 3 && d == 3)
-				ans = cnt;
-			else if (map[y][x] >= 3 && d == 0)
+			if ((map[y][x] < 3 && d == 3) || (map[y][x] >= 3 && d == 0))
 				ans = cnt;
 		}
 		return;
@@ -19,11 +17,11 @@ void dfs(int y, int x, int d, int cnt) {
 
 	if (y < 0 || x < 0 || y >= N || x >= N || !map[y][x] || visit[y][x] || cnt > ans)
 		return;
-	
-	if (y + x + cnt > ans) 
+
+	if (y + x + cnt > ans)
 		return;
-	
-	visit[y][x] = cnt+1;
+
+	visit[y][x] = cnt + 1;
 
 	if (map[y][x] < 3) {
 		dfs(y + dir[d][0], x + dir[d][1], d, cnt + 1);
@@ -79,7 +77,7 @@ int main() {
 				cin >> map[y][x];
 			}
 		}
-	
+
 		dfs(N - 1, N - 1, 3, 1);
 
 		cout << "#" << t_case << " " << ans << "\n";

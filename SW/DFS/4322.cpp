@@ -47,8 +47,7 @@ int main() {
 		for (int i = 0; i < N; ++i)
 			cin >> arrivr_time[i] >> L[i];
 
-		for (int i = 5; i <= 5; ++i) {
-			cout << "CPU : " << i << endl;
+		for (int i = 1; i <= 5; ++i) {
 			if (dfs(0, i)) {
 				ans = i;
 				break;
