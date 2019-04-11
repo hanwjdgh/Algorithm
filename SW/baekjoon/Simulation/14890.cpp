@@ -3,55 +3,37 @@
 
 using namespace std;
 
-int mp[101][101];
+int map[101][101];
+int N, L, ans;
 
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int N, L, ans = 0;
-
 	cin >> N >> L;
 
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
-			cin >> mp[i][j];
+	for (int y = 0; y < N; y++)
+		for (int x = 0; x < N; x++)
+			cin >> map[y][x];
 
-	for (int i = 0; i < N; i++) {
-		int cnt = 1, tcnt = 1;
-		bool check = false, tcheck = false;
+	for (int x = 0; x < N; x++)
+		for (int y = 0; y < N; y++)
+			map[N + x][y] = map[y][x];
 
-		for (int j = 0; j < N - 1; j++) {
-			if (mp[i][j] == mp[i][j + 1])
-				cnt++;
-			else if (mp[i][j] + 1 == mp[i][j + 1] && cnt >= L)
-				cnt = 1;
-			else if (mp[i][j] - 1 == mp[i][j + 1] && cnt >= 0)
-				cnt = -L + 1;
+	for (int y = 0; y < 2 * N; y++) {
+		int chk = 1, x = 0;
+		for (x = 0; x < N - 1; x++) {
+			if (map[y][x] == map[y][x + 1])
+				chk++;
+			else if (map[y][x] + 1 == map[y][x + 1] && chk >= L)
+				chk = 1;
+			else if (map[y][x] - 1 == map[y][x + 1] && chk >= 0)
+				chk = -L + 1;
 			else
 				break;
-
-			if (j == N - 2)
-				check = true;
 		}
-		if (cnt >= 0 && check)
-			ans++;
-
-		for (int j = 0; j < N - 1; j++) {
-			if (mp[j][i] == mp[j + 1][i])
-				tcnt++;
-			else if (mp[j][i] + 1 == mp[j + 1][i] && tcnt >= L)
-				tcnt = 1;
-			else if (mp[j][i] - 1 == mp[j + 1][i] && tcnt >= 0)
-				tcnt = -L + 1;
-			else
-				break;
-
-			if (j == N - 2)
-				tcheck = true;
-		}
-		if (tcnt >= 0 && tcheck)
+		if (x == N - 1 && chk >= 0)
 			ans++;
 	}
 

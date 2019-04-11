@@ -4,20 +4,20 @@
 
 using namespace std;
 
-typedef struct Move {
+struct Move {
 	int time;
 	char bang;
 };
 
-typedef struct Snake {
-	int x, y, t;
+struct Snake {
+	int y, x, t;
 };
 
 Snake node;
-Snake snake[10000];
-Move mve[100];
+Snake snake[10001];
+Move mve[101];
 
-int dir[4][2] = { {0,1},{1,0},{0,-1},{-1,0} };
+int dir[4][2] = { { 0,1 },{ 1,0 },{ 0,-1 },{ -1,0 } };
 int board[101][101];
 int N, K, L, di, cnt;
 int chk;
@@ -47,7 +47,7 @@ int main() {
 
 	while (!q.empty()) {
 		Snake cur = q.front();
-		int cx = cur.x, cy = cur.y, time = cur.t;
+		int cy = cur.y, cx = cur.x, time = cur.t;
 		q.pop();
 
 		if (mve[chk].time == time) {
@@ -58,29 +58,23 @@ int main() {
 
 			chk++;
 		}
-		cur.x = cx + dir[di][0], cur.y = cy + dir[di][1];
+		cur.y = cy + dir[di][0], cur.x = cx + dir[di][1];
 		cur.t += 1;
 
-		if (cur.x < 0 || cur.x >= N || cur.y < 0 || cur.y >= N || board[cur.x][cur.y] == -1) {
+		if (cur.y < 0 || cur.y >= N || cur.x < 0 || cur.x >= N || board[cur.y][cur.x] == -1) {
 			cout << cur.t << "\n";
 			break;
 		}
 
-		if (board[cur.x][cur.y] == 1) {
+		if (board[cur.y][cur.x] == 1) 
 			cnt++;
-			for (int i = cnt; i > 0; i--)
-				snake[i] = snake[i - 1];
-			snake[0] = cur;
-			board[cur.x][cur.y] = -1;
-		}
+		else 
+			board[snake[cnt].y][snake[cnt].x] = 0;
 
-		else {
-			board[snake[cnt].x][snake[cnt].y] = 0;
-			for (int i = cnt; i > 0; i--)
-				snake[i] = snake[i - 1];
-			snake[0] = cur;
-			board[cur.x][cur.y] = -1;
-		}
+		for (int i = cnt; i > 0; i--)
+			snake[i] = snake[i - 1];
+		snake[0] = cur;
+		board[cur.y][cur.x] = -1;
 
 		q.push(cur);
 	}

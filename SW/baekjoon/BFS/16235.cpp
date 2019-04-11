@@ -49,7 +49,6 @@ int main() {
 
 		while (!pq[cur].empty()) {
 			Tree cur_tree = pq[cur].top();
-
 			pq[cur].pop();
 
 			if (soil[cur_tree.y][cur_tree.x] >= cur_tree.age) {

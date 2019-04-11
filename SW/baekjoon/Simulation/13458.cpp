@@ -1,10 +1,9 @@
 #include <iostream>
 #include <ios>
-#include <vector>
 
 using namespace std;
 
-vector <int > v;
+int A[1000001];
 int N, B, C;
 long long ans;
 
@@ -17,20 +16,18 @@ int main() {
 
 	cin >> N;
 
-	for (int i = 0; i < N; i++) {
-		cin >> num;
-		v.push_back(num);
-	}
+	for (int i = 0; i < N; i++)
+		cin >> A[i];
 
 	cin >> B >> C;
 
 	for (int i = 0; i < N; i++) {
-		if (v[i] <= B)
+		if (A[i] <= B)
 			ans++;
 		else {
 			ans++;
-			ans += (v[i] - B) / C;
-			if ((v[i] - B) % C != 0)
+			ans += (A[i] - B) / C;
+			if ((A[i] - B) % C != 0)
 				ans++;
 		}
 	}

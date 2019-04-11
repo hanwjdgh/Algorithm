@@ -4,14 +4,15 @@
 
 using namespace std;
 
-typedef struct Robot {
+struct Robot {
 	int y, x, di;
 };
 
 Robot robot;
 int board[51][51];
-int N, M, cnt;
 int dir[4][2] = { { -1,0 },{ 0,1 },{ 1,0 },{ 0,-1 } };
+int conv[4][4] = { { 3,2,1,0 },{ 0,3,2,1 },{ 1,0,3,2 },{ 2,1,0,3 } }, bconv[4] = { 2,3,0,1 };
+int N, M, cnt;
 
 int main() {
 	cin.tie(NULL);
@@ -41,7 +42,7 @@ int main() {
 
 		for (int i = 0; i < 4; i++) {
 			Robot next;
-			next.di = (cdi + 3 - i) % 4;
+			next.di = conv[cdi][i];
 			next.y = cy + dir[next.di][0], next.x = cx + dir[next.di][1];
 
 			if (next.y < 0 || next.x < 0 || next.y >= N || next.x >= M || board[next.y][next.x] != 0)
@@ -53,8 +54,8 @@ int main() {
 		if (q.empty()) {
 			Robot next;
 			next.di = cdi;
-			next.y = cy + dir[(next.di+2)%4][0], next.x = cx + dir[(next.di + 2) % 4][1];
-		
+			next.y = cy + dir[bconv[cdi]][0], next.x = cx + dir[bconv[cdi]][1];
+
 			if (next.y < 0 || next.x < 0 || next.y >= N || next.x >= M || board[next.y][next.x] == 1)
 				break;
 			q.push(next);

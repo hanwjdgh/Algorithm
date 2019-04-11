@@ -7,7 +7,7 @@ int ladder[31][11];
 int N, M, H, target;
 bool not_err;
 
-void build(int idx, int cnt) {
+void dfs(int idx, int cnt) {
 	if (not_err)
 		return;
 
@@ -39,7 +39,7 @@ void build(int idx, int cnt) {
 				continue;
 			if (ladder[i][j - 1] != 1 && ladder[i][j + 1] != 1) {
 				ladder[i][j] = 1;
-				build(i, cnt + 1);
+				dfs(i, cnt + 1);
 				ladder[i][j] = 0;
 			}
 		}
@@ -62,7 +62,7 @@ int main() {
 
 	for (int i = 0; i < 4; i++) {
 		target = i;
-		build(1, 0);
+		dfs(1, 0);
 		if (not_err)
 			break;
 	}

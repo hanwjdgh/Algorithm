@@ -1,36 +1,41 @@
 #include <iostream>
 #include <ios>
-#include <vector>
 
 using namespace std;
 
 int arr[101][101];
-int dir[4][2] = { {0,1},{-1,0},{0,-1},{1,0} };
+int dir[4][2] = { { 0,1 },{ -1,0 },{ 0,-1 },{ 1,0 } };
+int conv[4] = { 1,2,3,0 };
+int N;
 
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 	ios::sync_with_stdio(false);
 
-	int N;
 	int x, y, d, g;
 
 	cin >> N;
 
 	for (int i = 0; i < N; i++) {
-		cin >> y >> x >> d >> g;
+		cin >> x >> y >> d >> g;
 
-		arr[x][y] = 1;
-		vector <int > v;
-		v.push_back(d);
-		while (g--) {
-			for (int j = v.size() - 1; j > -1; j--) {
-				v.push_back((v[j] + 1) % 4);
+		arr[y][x] = 1;
+		int temp[1025] = { 0, };
+		int rot = 1;
+		temp[0] = d;
+
+		for (int j = 0; j < g; j++) {
+			for (int k = rot - 1; k > -1; k--) {
+				int idx = rot * 2 - 1 - k;
+				temp[idx] = conv[temp[k]];
 			}
+			rot *= 2;
 		}
-		for (auto n : v) {
-			x += dir[n][0], y += dir[n][1];
-			arr[x][y] = 1;
+
+		for (int j = 0; j < rot; j++) {
+			y += dir[temp[j]][0], x += dir[temp[j]][1];
+			arr[y][x] = 1;
 		}
 	}
 

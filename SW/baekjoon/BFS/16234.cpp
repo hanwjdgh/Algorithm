@@ -12,9 +12,8 @@ typedef struct Contury {
 Contury con[10001];
 
 int A[101][101];
-int dir[4][2] = { {0,1},{1,0},{0,-1},{-1,0} };
+int dir[4][2] = { { 0,1 },{ 1,0 },{ 0,-1 },{ -1,0 } };
 int N, L, R, ans;
-
 
 int main() {
 	cin.tie(NULL);
@@ -38,7 +37,7 @@ int main() {
 			for (int x = 0; x < N; x++) {
 				if (visit[y][x])
 					continue;
-	
+
 				int cnt = 0, hap = 0;
 				Contury temp;
 				temp.y = y, temp.x = x;
@@ -58,10 +57,12 @@ int main() {
 						Contury next;
 						next.y = cur.y + dir[i][0], next.x = cur.x + dir[i][1];
 						int next_v = A[next.y][next.x];
+
 						if (next.y < 0 || next.x < 0 || next.y >= N || next.x >= N || visit[next.y][next.x])
 							continue;
 						if (abs(cur_v - next_v) < L || abs(cur_v - next_v) > R)
 							continue;
+
 						find = true;
 						q.push(next);
 						visit[next.y][next.x] = 1;
