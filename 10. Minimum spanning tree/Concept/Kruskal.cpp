@@ -43,23 +43,22 @@ int main() {
 	v.push_back({ 2,4,7 });
 	v.push_back({ 3,4,9 });
 
-	int mincost = 0;
+	int mincost = 0, edge_count = 0;
 
 	for (int i = 0; i < V; i++)
 		parent[i] = i;
 
 	sort(v.begin(), v.end());
 
-	int edge_count = 0;
 	for (auto n : v) {
 		if (find(n.src) != find(n.dst)) {
 			union1(n.src, n.dst);
 
-			cout << "Edge " << edge_count++ << "( " << n.src << "," << n.dst << ")" << " cost : " << n.weight << "\n";
+			cout << "Edge " << edge_count++ << " (" << n.src << "," << n.dst << ")" << " cost : " << n.weight << "\n";
 			mincost += n.weight;
 		}
 	}
-	
+
 	cout << "Minimum cost = " << mincost << "\n";
 
 	return 0;
