@@ -30,7 +30,7 @@ int main(void){
         }
         if (sum < 0)
 			sum = 0;
-        cout << "#"<<i<<" "<<sum<<endl;
+        cout << "#"<<i<<" "<<sum<<"\n";
     }
 
     return 0;
