@@ -6,6 +6,10 @@
 
 모든 주장은 증명이 동반되어야 한다.
 
-- 예제 : [3820. 롤러코스터](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3820.cpp) , [3947. 가장 짧은 길 전부 청소하기](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3947.cpp) , [3950. 괄호](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3950.cpp)
+## 1. 예제
+
+- [3820. 롤러코스터](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3820.cpp)
+- [3947. 가장 짧은 길 전부 청소하기](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3947.cpp)
+- [3950. 괄호](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/2.%20%EC%A6%9D%EB%AA%85%EC%9D%98%20%EC%A4%91%EC%9A%94%EC%84%B1/3950.cpp)
 
 개념에 대한 더 자세한 설명, 증명과정 및 예제와 문제에 대한 설명은 SWEA → LEARN → Course → Programming Professional → 증명의 중요성 참고

@@ -278,6 +278,10 @@ x ≡ a<sub>r</sub> (mod m<sub>r</sub>)
 
 RSA 알고리즘 예제는 SWEA → LEARN → Course → Programming Professional → 이산수학 → 9차시 이산수학 - PDF (p.60 ~ 61) 참고
 
-- 예제 : [3951. CRT](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3951.cpp) , [3952. 줄 세우기](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3952.cpp) , [3954. 파이의 합](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3954.cpp)
+### 10. 예제
+
+- [3951. CRT](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3951.cpp)
+- [3952. 줄 세우기](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3952.cpp)
+- [3954. 파이의 합](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/3.%20%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99/3954.cpp)
 
 개념에 대한 더 자세한 설명, 증명과정 및 예제와 문제에 대한 설명은 SWEA → LEARN → Course → Programming Professional → 이산수학 참고

@@ -124,6 +124,10 @@
 
 무작위 알고리즘에 대한 자세한 설명은 SWEA → LEARN → Course → Programming Professional → Counting & Probability → 20차시 Counting & Probability - PDF (p.53 ~ 55) 참고
 
-- 예제 : [3993. Pole](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3993.cpp) , [3996. Poker](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3996.cpp) , [3998. Inversion Counting](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3998.cpp)
+## 6. 예제
+
+- [3993. Pole](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3993.cpp)
+- [3996. Poker](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3996.cpp)
+- [3998. Inversion Counting](https://github.com/hanwjdgh/Algorithm/blob/master/SWEA/Professional/4.%20Counting%20%26%20Probability/3998.cpp)
 
 개념에 대한 더 자세한 설명, 증명과정 및 예제와 문제에 대한 설명은 SWEA → LEARN → Course → Programming Professional → Counting & Probability 참고
